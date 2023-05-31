@@ -15,27 +15,60 @@ class ShowPosts extends Component
     use WithPagination;
 
     
-    public $search, $post, $image, $identificador;
+    public  $post, $image, $identificador;
+    public $search="";
     public $sort = 'id';
     public $direction= 'desc';
     public $open_edit= false;
+    public $cant='10';
+    public $readyToLoad=false;
+
+    protected $queryString= ['cant' => ['except' => '10'],
+     'sort' => ['except' => 'id'], 
+     'direction' => ['except' => 'desc'], 
+     'search' => ['except' => ""]];
 
     public function mount(){
         $this->identificador = rand();
         $this-> post = new Post();
     }
+
+    public function updatingSearch(){
+        $this->resetPage();
+    }
+
     protected $rules = [
         'post.title' => 'required',
         'post.content' => 'required'
     ];
-    protected $listeners = ['render'];
+    protected $listeners = ['render', 'delete'];
 
     public function render()
     {
-        $posts = Post::where('title', 'like', '%' . $this->search . '%')
-                ->orWhere('content', 'like', '%' . $this->search . '%')
-                ->orderBy($this->sort, $this->direction)
-                ->paginate(10);
+
+        if($this->readyToLoad){
+            
+                $posts = Post::where(function ($query) {
+                    $user = auth()->user();
+        
+                    if ($user->hasRole('admin')) {
+                        // Si el usuario tiene el rol "admin", se muestran todos los posts
+                        return $query;
+                    } else {
+                        // Si el usuario tiene el rol "blogger", se muestran solo los propios posts
+                        return $query->where('user_id', $user->id);
+                    }
+                    })
+                
+
+       ->where('title', 'like', '%' . $this->search . '%')
+                    ->orWhere('content', 'like', '%' . $this->search . '%')
+                    ->orderBy($this->sort, $this->direction)
+                    ->paginate($this->cant);
+                   
+        }else{
+            $posts = [];
+        }
 
         return view('livewire.show-posts', compact('posts'));
     }
@@ -59,6 +92,9 @@ $this->post = $post;
 $this->open_edit = true;
     }
 
+    public function loadPosts(){
+        $this->readyToLoad=true;
+    }
 
     public function update(){
         $this -> validate();
@@ -75,5 +111,9 @@ $this->open_edit = true;
         $this->emit('alert', 'El post se ha actualizado correctamente');
 
 
+    }
+
+    public function delete(Post $post){
+        $post->delete();
     }
 }
