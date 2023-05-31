@@ -65,17 +65,4 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public static function create(array $data)
-    {
-        $user = static::query()->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-
-        $roleBlogger = \Spatie\Permission\Models\Role::where('name', 'blogger')->first();
-        $user->assignRole($roleBlogger);
-
-        return $user;
-    }
 }
