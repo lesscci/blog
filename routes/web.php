@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\CrearUser;
+use App\Http\Livewire\PanelControl;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +30,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::get('/admin-panel', function () {
-        return view('admin.panel');
-    })->name('admin.panel');
 
-});
 
+Route::get('/crear-user', CrearUser::class)->name('crear-user');
+Route::get('/panel-control', PanelControl::class)->name('panel-control');

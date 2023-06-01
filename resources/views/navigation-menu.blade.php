@@ -13,10 +13,10 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('POSTS') }}
+                        {{ __('Mis Posts') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('admin.panel') }}" :active="request()->routeIs('Panel de Control')">
-                        {{ __('Panel de Control') }}
+                    <x-nav-link href="{{ route('crear-user') }}" :active="request()->routeIs('crear-user')">
+                        {{ __('Crear Usuario') }}
                     </x-nav-link>
                 </div>
             </div>
