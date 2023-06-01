@@ -21,5 +21,6 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'view all posts'])->assignRole($roleAdmin);
         Permission::create(['name' => 'view own posts'])->assignRole($roleBlogger);
 
+        
     }
 }

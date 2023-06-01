@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\Post;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,10 +16,42 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-      
-        //Storage::deleteDirectory('storage');
-         Post::factory(20)->create();
-
-     
+        $carpeta = 'public/storage/posts';
+    
+        if (file_exists($carpeta)) {
+            $this->deleteDirectory($carpeta);
+        }
+    
+        mkdir($carpeta, 0777, true);
+    
+        Post::factory(5)->create();
     }
+    
+    /**
+     * Elimina un directorio y su contenido de forma recursiva.
+     *
+     * @param string $dir
+     * @return void
+     */
+    private function deleteDirectory(string $dir): void
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+    
+        $files = array_diff(scandir($dir), ['.', '..']);
+    
+        foreach ($files as $file) {
+            $path = $dir . '/' . $file;
+    
+            if (is_dir($path)) {
+                $this->deleteDirectory($path);
+            } else {
+                unlink($path);
+            }
+        }
+    
+        rmdir($dir);
+    }
+    
 }
