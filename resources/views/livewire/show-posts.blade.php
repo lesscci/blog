@@ -55,9 +55,14 @@
                                     Edit
                                 </a>
 
-                                <a href="#" class="btn btn-red ml-2" wire:click="$emit('deletePost', {{ $item }})"> 
-                                    <i class="fas fa-trash">Eliminar</i>
-                                </a>
+                                @can('post.delete')
+                                    <!-- Mostrar el botón de eliminar solo para el administrador -->
+                                    <a href="#" class="btn btn-red ml-2"
+                                        wire:click="$emit('deletePost', {{ $item }})">
+                                        <i class="fas fa-trash">Eliminar</i>
+                                    </a>
+                                @endcan
+
 
                             </td>
                         </tr>
@@ -106,7 +111,7 @@
 
             <div>
                 <x-label value="Contenido del post" />
-                <textarea  wire:model="post.content"
+                <textarea wire:model="post.content"
                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="6">
         </textarea>
 
@@ -130,51 +135,49 @@
     </x-dialog-modal>
 
     @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-   Livewire.on('deletePost', postId => {
-    const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-  },
-  buttonsStyling: false
-})
+        <script>
+            Livewire.on('deletePost', postId => {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
 
-swalWithBootstrapButtons.fire({
-  title: 'Are you sure?',
-  text: "You won't be able to revert this!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonText: 'Yes, delete it!',
-  cancelButtonText: 'No, cancel!',
-  reverseButtons: true
-}).then((result) => {
-  if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-    Livewire.emitTo("show-posts", 'delete', postId);
+                        Livewire.emitTo("show-posts", 'delete', postId);
 
 
-    swalWithBootstrapButtons.fire(
-      'Deleted!',
-      'Your file has been deleted.',
-      'success'
-    )
-  } else if (
-    result.dismiss === Swal.DismissReason.cancel
-  ) {
-    swalWithBootstrapButtons.fire(
-      'Cancelled',
-      'Your imaginary file is safe :)',
-      'error'
-    )
-  }
-})
-   })
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    } else if (
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Your imaginary file is safe :)',
+                            'error'
+                        )
+                    }
+                })
+            })
         </script>
-
-
     @endpush
 
 </div>

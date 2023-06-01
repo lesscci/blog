@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use App\Models\Post;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Auth;
+
 
 class CreatePost extends Component
 {
@@ -32,17 +34,23 @@ class CreatePost extends Component
 
 
     public function save(){
+       
 
         //antes de nada valido
         $this -> validate();
 
         $image= $this-> image->store('storage');
 
+
+        $userId = Auth::id();
+       
+
         //Creo el Post
        Post::create([
             'title' => $this->title,
             'content' => $this->content,
-            'image'=> $image
+            'image'=> $image,
+'user_id' => $userId,
         ]);
 
         //reseteo los campos

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Post;
-
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +22,8 @@ class DatabaseSeeder extends Seeder
         }
     
         mkdir($carpeta, 0777, true);
-    
+        $this->call(RoleSeeder::class);
+        $this->call(UserSeeder::class);
         Post::factory(5)->create();
     }
     

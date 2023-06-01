@@ -15,12 +15,20 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roleAdmin = Role::create(['name' => 'Admin']);
-        $roleBlogger = Role::create(['name' => 'Blogger']);
+        $roleAdmin = Role::create(['name' => 'admin']);
+        $roleBlogger = Role::create(['name' => 'blogger']);
 
-        Permission::create(['name' => 'view all posts'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'view own posts'])->assignRole($roleBlogger);
-
+        //syncRoles me permite asignarle los permisos a más de un rol, necesita un array
+        Permission::create(['name' => 'admin.home'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.create'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.destroy '])->assignRole($roleAdmin);
         
+        Permission::create(['name' => 'post.own'])->assignRole($roleBlogger);
+        Permission::create(['name' => 'post.create'])->assignRole($roleBlogger);
+        Permission::create(['name' => 'post.delete'])->assignRole($roleAdmin);
+
+
+        $roleAdmin->syncPermissions(Permission::all());
+
     }
 }
