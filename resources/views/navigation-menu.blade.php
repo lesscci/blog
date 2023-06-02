@@ -15,9 +15,12 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Mis Posts') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('crear-user') }}" :active="request()->routeIs('crear-user')">
-                        {{ __('Crear Usuario') }}
+
+                    @role('admin')
+                    <x-nav-link href="{{ route('panel-control') }}" :active="request()->routeIs('panel-control')">
+                        {{ __('Panel de control') }}
                     </x-nav-link>
+                    @endrole
                 </div>
             </div>
 

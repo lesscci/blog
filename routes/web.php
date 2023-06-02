@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Controller;
+use App\Http\Livewire\ShowUser;
 use App\Http\Livewire\CrearUser;
-use App\Http\Livewire\PanelControl;
+use App\Http\Livewire\ShowPosts;
 use Spatie\Permission\Models\Role;
+use App\Http\Livewire\PanelControl;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middlewares\RoleMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +34,15 @@ Route::middleware([
     })->name('dashboard');
 });
 
+//Solo el que tenga rol de ADMIN 
+Route::middleware([
+    'auth:sanctum', 
+    config('jetstream.auth_session'), 
+    'verified', RoleMiddleware::class . ':admin'])->group(function () {
+    Route::get('/panel-control', PanelControl::class)->name('panel-control');
+    Route::get('/usuarios', ShowUser::class)->name('admin.show-user');
+    Route::get('/posts/{type}', ShowPosts::class)->name('show-posts');
+});
 
 
-Route::get('/crear-user', CrearUser::class)->name('crear-user');
-Route::get('/panel-control', PanelControl::class)->name('panel-control');
+

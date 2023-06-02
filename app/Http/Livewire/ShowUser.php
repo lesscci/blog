@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Post;
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
@@ -10,18 +10,18 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 
-class ShowPosts extends Component
+class ShowUser extends Component
 {
 
     use WithFileUploads; 
     use WithPagination;
 
     
-    public  $post, $image, $identificador;
+    public  $user;
     public $search="";
     public $sort = 'id';
     public $direction= 'desc';
-    public $open_edit= false;
+    public $open_edit_admin= false;
     public $cant='10';
     public $readyToLoad=false;
 
@@ -31,8 +31,7 @@ class ShowPosts extends Component
      'search' => ['except' => ""]];
 
     public function mount(){
-        $this->identificador = rand();
-        $this-> post = new Post();
+        $this-> user = new User();
     }
 
     public function updatingSearch(){
@@ -40,36 +39,30 @@ class ShowPosts extends Component
     }
 
     protected $rules = [
-        'post.title' => 'required',
-        'post.content' => 'required'
+        'user.title' => 'required',
+        'user.content' => 'required'
     ];
     protected $listeners = ['render', 'delete'];
 
     public function render()
     {
-
-    $user = Auth::user();
-
-        if($this->readyToLoad){
-            $query = Post::query();
-
-        if (!$user->hasRole('admin')) {
-            $query->where('user_id', $user->id);
-        }
-
-        $posts = $query->where(function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('content', 'like', '%' . $this->search . '%');
+        
+        if ($this->readyToLoad) {
+            $query = User::where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%');
             })
-            ->orderBy($this->sort, $this->direction)
-            ->paginate($this->cant);
-                   
-        }else{
-            $posts = [];
+            ->orderBy($this->sort, $this->direction);
+    
+            $users = $query->paginate($this->cant);
+        } else {
+            $users = User::paginate($this->cant);
         }
-
-        return view('livewire.show-posts', compact('posts'));
+    
+    
+        return view('livewire.admin.show-user', compact('users'));
     }
+    
 
     public function order($sort)
 {
@@ -86,33 +79,26 @@ class ShowPosts extends Component
 }
 
 
-    public function edit(Post $post){
-$this->post = $post;
-$this->open_edit = true;
+    public function edit(User $user){
+$this->user = $user;
+$this->open_edit_admin = true;
     }
 
-    public function loadPosts(){
+    public function loadUsers(){
         $this->readyToLoad=true;
     }
 
     public function update(){
         $this -> validate();
-        
-        if($this->image){
-           Storage::delete([$this->post->image]);
-        $this->post->image = $this->image->store('posts'); 
-        }
-        
-        $this->post->save();
+               
+        $this->user->save();
 
-        $this->reset(['open_edit']);
-        $this->emitTo('show-posts','render');
-        $this->emit('alert', 'El post se ha actualizado correctamente');
-
-
+        $this->reset(['open_edit_admin']);
+        $this->emitTo('show-users','render');
+        $this->emit('alert', 'El user se ha actualizado correctamente');
     }
 
-    public function delete(Post $post){
-        $post->delete();
+    public function delete(User $user){
+        $user->delete();
     }
 }

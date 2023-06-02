@@ -1,4 +1,6 @@
 <div>
+    
+
     <x-danger-button wire:click="$set('open', true)">
         Crear un nuevo post
     </x-danger-button>

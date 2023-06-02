@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'post.own'])->assignRole($roleBlogger);
         Permission::create(['name' => 'post.create'])->assignRole($roleBlogger);
         Permission::create(['name' => 'post.delete'])->assignRole($roleAdmin);
-
+        
 
         $roleAdmin->syncPermissions(Permission::all());
 

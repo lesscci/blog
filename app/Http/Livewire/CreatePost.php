@@ -7,6 +7,9 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Session;
+
+
 
 class CreatePost extends Component
 {
@@ -50,7 +53,7 @@ class CreatePost extends Component
             'title' => $this->title,
             'content' => $this->content,
             'image'=> $image,
-'user_id' => $userId,
+            'user_id' => $userId,
         ]);
 
         //reseteo los campos
@@ -61,7 +64,9 @@ class CreatePost extends Component
 
         //Vuelve a renderizar y muestra la lista actualizada del post
         $this->emitTo('show-posts','render');
-        $this->emit('alert', 'El post se creó correctamente');
+        Session::flash('success', 'El post se creó correctamente');
+
+
     }
 
   
@@ -70,6 +75,8 @@ class CreatePost extends Component
     {
         return view('livewire.create-post');
     }
+
+    
 
     public function updatingOpen(){
         if($this->open ===false){
@@ -80,4 +87,5 @@ class CreatePost extends Component
     
     }
 
+   
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 
 class ShowPosts extends Component
@@ -15,7 +16,6 @@ class ShowPosts extends Component
 
     use WithFileUploads; 
     use WithPagination;
-
     
     public  $post, $image, $identificador;
     public $search="";
@@ -30,9 +30,10 @@ class ShowPosts extends Component
      'direction' => ['except' => 'desc'], 
      'search' => ['except' => ""]];
 
-    public function mount(){
+    public function mount($type){
         $this->identificador = rand();
         $this-> post = new Post();
+        $this->type = $type;
     }
 
     public function updatingSearch(){
@@ -45,31 +46,30 @@ class ShowPosts extends Component
     ];
     protected $listeners = ['render', 'delete'];
 
-    public function render()
+
+
+    public function render(Request $request)
     {
+        $posts = Post::where('title', 'like', '%' . $this->search . '%');
 
-    $user = Auth::user();
-
-        if($this->readyToLoad){
-            $query = Post::query();
-
-        if (!$user->hasRole('admin')) {
-            $query->where('user_id', $user->id);
+        if ($this->type!='general'){
+            $query = $posts->where(function($q){
+                $q->where('user_id', Auth::user()->id);
+             });
         }
-
-        $posts = $query->where(function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('content', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy($this->sort, $this->direction)
-            ->paginate($this->cant);
-                   
-        }else{
-            $posts = [];
-        }
-
+        
+        $posts = $posts->orderBy($this->sort, $this->direction)->paginate($this->cant);
+        
         return view('livewire.show-posts', compact('posts'));
     }
+    
+
+
+    
+    
+    
+
+
 
     public function order($sort)
 {
@@ -114,5 +114,7 @@ $this->open_edit = true;
 
     public function delete(Post $post){
         $post->delete();
+
+
     }
 }
