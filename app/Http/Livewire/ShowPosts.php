@@ -65,12 +65,6 @@ class ShowPosts extends Component
     
 
 
-    
-    
-    
-
-
-
     public function order($sort)
 {
     if ($this->sort == $sort) {
@@ -87,8 +81,8 @@ class ShowPosts extends Component
 
 
     public function edit(Post $post){
-$this->post = $post;
-$this->open_edit = true;
+        $this->post = $post;
+        $this->open_edit = true;
     }
 
     public function loadPosts(){
@@ -114,7 +108,5 @@ $this->open_edit = true;
 
     public function delete(Post $post){
         $post->delete();
-
-
     }
 }

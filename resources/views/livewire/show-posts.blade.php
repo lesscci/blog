@@ -10,10 +10,8 @@
             <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md m-5">
                 <div class="px-6 py-4 items-center">
 
-                    <div class="flex item-center"
-                        style="    display: flex;
-            justify-content: flex-end;
-            align-items: center; gap: 10px; padding: 10px;">
+                    <div class="flex items-center justify-end gap-4 p-4">
+
                         <span>Mostrar </span>
                         <select wire:model="cant" class="mx-2 form-control">
                             <option value="10">10</option>
@@ -23,11 +21,8 @@
 
                         </select>
                     </div>
-                    <div class="flex-1 ml-4"
-                        style="
-            display: flex;
-            align-items: center;
-            gap: 50px;">
+                    <div class="flex-1 ml-4 flex items-center gap-4">
+
                         <x-input type="text" wire:model="search" class="flex-1 mr-4"
                             placeholder="Escribe que quiere buscar" />
                         <div>
@@ -98,9 +93,6 @@
                     </div>
 
                 @endif
-
-
-
             </div>
 
             <x-dialog-modal wire:model="open_edit">
@@ -115,7 +107,6 @@
                         role="alert">
                         <strong class="font-bold">Imagen cargando</strong>
                         <span class="block sm:inline">Espere un momento....</span>
-
                     </div>
 
                     @if ($image)
@@ -133,12 +124,10 @@
                         <textarea wire:model="post.content"
                             class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="6">
                         </textarea>
-
                     </div>
                     <div>
                         <input type="file" wire:model="image" id="{{ $identificador }}">
                         <x-input-error for="image" />
-
                     </div>
                 </x-slot>
 
@@ -155,7 +144,6 @@
 
             @push('js')
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
                 <script>
                     Livewire.on('deletePost', postId => {
                         const swalWithBootstrapButtons = Swal.mixin({

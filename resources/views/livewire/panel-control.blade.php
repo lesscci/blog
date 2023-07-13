@@ -28,7 +28,6 @@
                             <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                                 Usuarios
                             </h5>
-
                           
                             <a href="{{ route('admin.show-user') }}"
                                 class="inline-flex items-center text-blue-600 hover:underline">

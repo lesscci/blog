@@ -42,4 +42,5 @@ class EditPost extends Component
     {
         return view('livewire.edit-post');
     }
+    
 }
